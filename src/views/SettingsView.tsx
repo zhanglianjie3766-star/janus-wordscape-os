@@ -6,6 +6,7 @@ import { samplePackage } from '../samplePackage';
 import { buildStorageBudgetReport } from '../storageBudget';
 import { DEFAULT_USER_AVATAR_SRC, DEFAULT_USER_NICKNAME, type UserProfile } from '../userProfile';
 import { APP_VERSION, BACKUP_SCHEMA_VERSION } from '../version';
+import { getImportFileValidationError } from '../security';
 import type { IntegrityReport } from '../integrity';
 import type { StorageBudgetReport } from '../storageBudget';
 import type { AppData, ImportIssue, ImportResult } from '../types';
@@ -13,6 +14,8 @@ import type { AppData, ImportIssue, ImportResult } from '../types';
 type PersistenceUiStatus = {
   source: 'loading' | 'indexeddb' | 'indexeddb_recovered' | 'indexeddb_corrupt' | 'legacy_localstorage' | 'localstorage_shadow' | 'empty' | 'fallback_localstorage';
   migrated_from_localstorage: boolean;
+  save_pending?: boolean;
+  last_saved_at?: string;
   error?: string;
 };
 
@@ -270,6 +273,21 @@ function ImportControls({ onImportPackage }: { onImportPackage: ImportPackageHan
   }
 
   async function handleFile(file: File) {
+    const fileError = getImportFileValidationError(file);
+    if (fileError) {
+      setLastResult({
+        package_id: file.name,
+        format: file.name.toLowerCase().endsWith('.csv') ? 'csv' : file.name.toLowerCase().endsWith('.tsv') ? 'tsv' : 'json',
+        imported_cards: 0,
+        skipped_duplicates: 0,
+        imported_domain_packs: 0,
+        errors: [{ field: 'file', message: fileError }],
+        warnings: []
+      });
+      setMessage(`导入失败：${fileError}`);
+      return;
+    }
+
     const text = await file.text();
     const parsed = parsePackageText(text, file.name);
 

@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="TechLex OS icon">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Janus Wordscape OS icon">
   <rect width="512" height="512" rx="96" fill="#d11b3d"/>
-  <path d="M128 132h256v56H284v220h-56V188H128z" fill="#ffffff"/>
-  <path d="M150 410h212v-48h-86v-56h-56v56h-70z" fill="#ffe4ea"/>
+  <path d="M168 112h176v54h-58v190c0 44-29 72-76 72-25 0-47-8-66-23l24-45c13 9 25 13 38 13 18 0 27-9 27-28V166h-65z" fill="#ffffff"/>
+  <path d="M292 355c24 14 48 14 72-1l20 45c-34 22-75 22-112 1z" fill="#ffe4ea"/>
 </svg>

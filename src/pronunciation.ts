@@ -1,4 +1,5 @@
 import type { WordCard } from './types';
+import { normalizeSafeAudioReference } from './security';
 
 const FALLBACK_PHONETICS: Record<string, string> = {
   'workspace': '/ˈwɝːkˌspeɪs/',
@@ -146,11 +147,17 @@ function buildPronunciationAudioUrls(card: PronunciationCard) {
   const urls: string[] = [];
 
   if (card.audio_url) {
-    urls.push(card.audio_url);
+    const safeAudioUrl = normalizeSafeAudioReference(card.audio_url);
+    if (safeAudioUrl) {
+      urls.push(safeAudioUrl);
+    }
   }
 
   if (card.audio_asset_id) {
-    urls.push(card.audio_asset_id.startsWith('http') || card.audio_asset_id.startsWith('/') ? card.audio_asset_id : `/${card.audio_asset_id}`);
+    const safeAudioAsset = normalizeSafeAudioReference(card.audio_asset_id);
+    if (safeAudioAsset) {
+      urls.push(safeAudioAsset);
+    }
   }
 
   // Public dictionary audio is a no-key fallback for browsers where Web Speech is silent or unavailable.

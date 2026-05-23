@@ -86,6 +86,7 @@ docs/DESIGN_TOKENS_FREEZE_v1.0.md
 docs/COMPONENTS_FREEZE_v1.0.md
 docs/DATA_FLOW_FREEZE_v1.0.md
 docs/UI_REGRESSION_SCRIPT_FREEZE_v1.0.md
+docs/VERSION_ROADMAP_v0.1_to_v1.0.md
 data/exports/obsidian-reference-svid-083829/contact_sheet.jpg
 data/exports/obsidian-reference-svid-083829/contact_sheet_full.jpg
 data/exports/phase10f-vocabulary-notebook-smoke-report.json

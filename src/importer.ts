@@ -1,5 +1,6 @@
 import { createInitialMemoryState } from './fsrsEngine';
 import { mergeDomainPacks } from './domainPacks';
+import { MAX_CARDS_PER_IMPORT, isSafeAudioReference, isSafeHttpUrl } from './security';
 import type { AppData, AudioAccent, CardStatus, FrequencyTier, ImportFormat, ImportIssue, ImportResult, StandardWordCardPackage, WordCard } from './types';
 
 function isRecord(value: unknown): value is Record<string, unknown> {
@@ -117,6 +118,11 @@ function validateCard(card: unknown, index: number): ImportIssue[] {
         errors.push(issue(`source.${field} is required.`, `source.${field}`, row, cardId));
       }
     }
+
+    const sourceUrl = asString(card.source.source_url);
+    if (sourceUrl && !isSafeHttpUrl(sourceUrl)) {
+      errors.push(issue('source.source_url must be a safe http(s) URL without embedded credentials.', 'source.source_url', row, cardId));
+    }
   }
 
   if (!Array.isArray(card.scene_tags) || card.scene_tags.length === 0) {
@@ -135,6 +141,13 @@ function validateCard(card: unknown, index: number): ImportIssue[] {
     const value = card[field];
     if (field in card && value !== undefined && value !== null && typeof value !== 'string') {
       errors.push(issue(`${field} must be a string when provided.`, field, row, cardId));
+    }
+  }
+
+  for (const field of ['audio_url', 'audio_asset_id']) {
+    const audioValue = asString(card[field]);
+    if (audioValue && !isSafeAudioReference(audioValue)) {
+      errors.push(issue(`${field} must be a safe http(s) URL or a same-origin audio asset path.`, field, row, cardId));
     }
   }
 
@@ -178,6 +191,8 @@ function normalizeJsonPackage(input: unknown): { pkg?: StandardWordCardPackage; 
 
   if (!Array.isArray(input.cards)) {
     errors.push(issue('cards must be an array.', 'cards'));
+  } else if (input.cards.length > MAX_CARDS_PER_IMPORT) {
+    errors.push(issue(`cards exceeds maximum import size of ${MAX_CARDS_PER_IMPORT}.`, 'cards'));
   }
 
   if (!Array.isArray(input.domain_packs)) {

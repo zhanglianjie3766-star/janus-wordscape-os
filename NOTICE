@@ -9,6 +9,29 @@ Janus Wordscape OS - Technical English Vocabulary Network
 
 Historical development codename: `TechLex OS`.
 
+## Open-Source Model
+
+This project follows an Anki-like community ecosystem model:
+
+```text
+Software code: AGPL-3.0-or-later
+Documentation: CC BY-SA 4.0
+Sample card packages and production blueprints: CC BY-SA 4.0, unless stated otherwise
+Brand names and marks: reserved by the project owner
+```
+
+The AGPL software license is intended to keep community improvements open. If a
+modified version is distributed or provided as a network service, the
+corresponding source code must remain available under AGPL-compatible terms.
+
+## Brand Notice
+
+`雅努斯词境 OS`, `Janus Wordscape OS`, and related project marks identify this
+project. The open-source code license does not grant permission to present a
+modified or unrelated product as an official Janus Wordscape OS release.
+
+See `BRAND_POLICY.md`.
+
 ## Third-Party Algorithm Dependency
 
 This application uses `ts-fsrs` as the local FSRS scheduler implementation.

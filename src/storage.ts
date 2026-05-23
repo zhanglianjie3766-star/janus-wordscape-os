@@ -21,6 +21,14 @@ export interface PersistenceLoadResult {
   error?: string;
 }
 
+export type PersistenceSaveSource = 'indexeddb' | 'fallback_localstorage';
+
+export interface PersistenceSaveResult {
+  source: PersistenceSaveSource;
+  saved_at: string;
+  error?: string;
+}
+
 const defaultLearningPlan: LearningPlan = {
   daily_new_limit: 10,
   daily_review_limit: 30,
@@ -157,6 +165,8 @@ function writeIndexedDbRecord(key: string, value: unknown): Promise<void> {
       })
   );
 }
+
+let saveQueue: Promise<void> = Promise.resolve();
 
 function deleteIndexedDbRecord(key: string): Promise<void> {
   return openDatabase().then(
@@ -304,19 +314,47 @@ export async function loadPersistedData(): Promise<PersistenceLoadResult> {
   }
 }
 
-export function saveData(data: AppData): void {
+export function saveData(data: AppData): Promise<PersistenceSaveResult> {
   const normalized = normalizeAppData(data);
   writeLocalStorageShadow(normalized);
-  void (async () => {
-    await writeIndexedDbRecord(CURRENT_DATA_KEY, normalized);
-    await writeIndexedDbRecord(LAST_GOOD_DATA_KEY, normalized);
-  })().catch(() => {
+
+  const operation = async (): Promise<PersistenceSaveResult> => {
+    const savedAt = new Date().toISOString();
     try {
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
-    } catch {
-      // The UI keeps the in-memory copy. The user can still export a backup from Settings.
+      await writeIndexedDbRecord(CURRENT_DATA_KEY, normalized);
+      await writeIndexedDbRecord(LAST_GOOD_DATA_KEY, normalized);
+      return {
+        source: 'indexeddb',
+        saved_at: savedAt
+      };
+    } catch (error) {
+      try {
+        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(normalized));
+        return {
+          source: 'fallback_localstorage',
+          saved_at: savedAt,
+          error: error instanceof Error ? error.message : String(error)
+        };
+      } catch (fallbackError) {
+        throw new Error(
+          `Failed to persist app data. IndexedDB: ${error instanceof Error ? error.message : String(error)}. localStorage: ${
+            fallbackError instanceof Error ? fallbackError.message : String(fallbackError)
+          }`
+        );
+      }
     }
-  });
+  };
+
+  const result = saveQueue.then(operation, operation);
+  saveQueue = result.then(
+    () => undefined,
+    () => undefined
+  );
+  return result;
+}
+
+export function flushSaveDataQueue(): Promise<void> {
+  return saveQueue;
 }
 
 export function createBackup(data: AppData): AppBackup {
@@ -382,6 +420,5 @@ export function clearLastImportRollback(): void {
 
 export function resetData(): AppData {
   const empty = createEmptyData();
-  saveData(empty);
   return empty;
 }

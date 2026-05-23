@@ -15,14 +15,17 @@ import {
   Volume2
 } from 'lucide-react';
 import { lazy, Suspense, useEffect, useMemo, useState } from 'react';
+import { validateBackupInput } from './backupValidation';
 import { defaultDomainPacks, getPackName } from './domainPacks';
 import { formatFrequencyTier, frequencyTierOptions } from './frequencyTiers';
 import { previewReviewIntervals } from './fsrsEngine';
 import { importPackage, parsePackageText } from './importer';
 import { getCardPhonetic, getPronunciationAccentLabel, playCardPronunciation } from './pronunciation';
 import { applyReview, getReviewStageQueue, isReviewStageDue } from './scheduler';
-import { createBackup, hasLastImportRollback, loadData, loadLastImportRollbackAsync, loadPersistedData, normalizeAppData, resetData, saveData, saveLastImportRollback, type PersistenceLoadSource } from './storage';
+import { getBackupFileValidationError } from './security';
+import { createBackup, hasLastImportRollback, loadLastImportRollbackAsync, resetData, saveLastImportRollback } from './storage';
 import { loadUserProfile, saveUserProfile, type UserProfile } from './userProfile';
+import { usePersistentAppData } from './usePersistentAppData';
 import type { AppData, DomainPack, FrequencyTier, ImportResult, Rating, WordCard } from './types';
 
 type ViewKey = 'today' | 'decks' | 'review' | 'browser' | 'galaxy' | 'stats' | 'settings';
@@ -56,12 +59,6 @@ function getTopNavKey(view: ViewKey): TopNavKey {
   }
   return view;
 }
-type PersistenceUiStatus = {
-  source: PersistenceLoadSource | 'loading';
-  migrated_from_localstorage: boolean;
-  error?: string;
-};
-
 function LazyViewFallback({ title }: { title: string }) {
   return (
     <section className="rounded-lg border border-line bg-white p-6 text-center shadow-sm">
@@ -1366,14 +1363,10 @@ function DecksView({
 }
 
 export function App() {
-  const [data, setData] = useState<AppData>(() => loadData());
+  const { data, persist, persistenceStatus } = usePersistentAppData();
   const [view, setView] = useState<ViewKey>('today');
   const [userProfile, setUserProfile] = useState<UserProfile>(() => loadUserProfile());
   const [hasImportRollback, setHasImportRollback] = useState(() => hasLastImportRollback());
-  const [persistenceStatus, setPersistenceStatus] = useState<PersistenceUiStatus>({
-    source: 'loading',
-    migrated_from_localstorage: false
-  });
   const [queueClock, setQueueClock] = useState(() => Date.now());
   const reviewStageQueue = useMemo(() => getReviewStageQueue(data, new Date(queueClock)), [data, queueClock]);
 
@@ -1381,36 +1374,6 @@ export function App() {
     const intervalId = window.setInterval(() => setQueueClock(Date.now()), 60_000);
     return () => window.clearInterval(intervalId);
   }, []);
-
-  useEffect(() => {
-    let mounted = true;
-    void loadPersistedData().then((result) => {
-      if (!mounted) {
-        return;
-      }
-
-      setData(result.data);
-      setPersistenceStatus({
-        source: result.source,
-        migrated_from_localstorage: result.migrated_from_localstorage,
-        error: result.error
-      });
-    });
-
-    return () => {
-      mounted = false;
-    };
-  }, []);
-
-  function persist(next: AppData) {
-    setData(next);
-    saveData(next);
-    setPersistenceStatus((current) => ({
-      ...current,
-      source: current.source === 'fallback_localstorage' ? current.source : 'indexeddb',
-      migrated_from_localstorage: current.migrated_from_localstorage
-    }));
-  }
 
   function navigateToTopNav(key: TopNavKey) {
     setView(key);
@@ -1474,13 +1437,22 @@ export function App() {
 
   async function restoreBackup(file: File) {
     try {
+      const fileError = getBackupFileValidationError(file);
+      if (fileError) {
+        throw new Error(fileError);
+      }
+
       const text = await file.text();
-      const restored = normalizeAppData(JSON.parse(text));
-      persist(restored);
+      const validation = validateBackupInput(JSON.parse(text));
+      if (!validation.data) {
+        throw new Error(validation.errors[0] ?? 'Invalid backup data.');
+      }
+
+      persist(validation.data);
       setView('today');
       window.alert('备份已恢复。');
-    } catch {
-      window.alert('备份恢复失败：请选择 TechLex OS 导出的 JSON 文件。');
+    } catch (error) {
+      window.alert(`备份恢复失败：${error instanceof Error ? error.message : '请选择雅努斯词境 OS 导出的 JSON 文件。'}`);
     }
   }
 

@@ -4,7 +4,7 @@ export type UserProfile = {
 };
 
 export const DEFAULT_USER_NICKNAME = 'JanusAI';
-export const DEFAULT_USER_AVATAR_SRC = '/avatars/default-user-avatar.svg';
+export const DEFAULT_USER_AVATAR_SRC = './avatars/default-user-avatar.svg';
 
 const USER_PROFILE_STORAGE_KEY = 'techlex-os:user-profile:v1';
 
@@ -27,13 +27,23 @@ export function loadUserProfile(): UserProfile {
     }
 
     const parsed = JSON.parse(raw) as Partial<UserProfile>;
+    const avatarSrc = typeof parsed.avatar_src === 'string' && parsed.avatar_src ? parsed.avatar_src : DEFAULT_USER_AVATAR_SRC;
+
     return {
       nickname: typeof parsed.nickname === 'string' && parsed.nickname.trim() ? parsed.nickname.trim() : DEFAULT_USER_NICKNAME,
-      avatar_src: typeof parsed.avatar_src === 'string' && parsed.avatar_src ? parsed.avatar_src : DEFAULT_USER_AVATAR_SRC
+      avatar_src: normalizeAvatarSrc(avatarSrc)
     };
   } catch {
     return defaultUserProfile();
   }
+}
+
+function normalizeAvatarSrc(src: string): string {
+  if (src === '/avatars/default-user-avatar.svg') {
+    return DEFAULT_USER_AVATAR_SRC;
+  }
+
+  return src;
 }
 
 export function saveUserProfile(profile: UserProfile) {

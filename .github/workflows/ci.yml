@@ -25,6 +25,9 @@ jobs:
       - name: Install dependencies
         run: corepack pnpm install --frozen-lockfile
 
+      - name: Production dependency audit
+        run: corepack pnpm audit --prod
+
       - name: Typecheck
         run: corepack pnpm run typecheck
 
@@ -33,3 +36,6 @@ jobs:
 
       - name: Production build
         run: corepack pnpm run build
+
+      - name: Security input boundary smoke
+        run: corepack pnpm run smoke:security

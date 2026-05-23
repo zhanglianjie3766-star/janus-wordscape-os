@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { PointerEvent as ReactPointerEvent } from 'react';
 import { formatSceneLabel } from '../displayLabels';
 import { formatFrequencyTier } from '../frequencyTiers';
+import { resolveGraphNodeContact, resolveGraphNodeTap, type GraphTouchHighlight } from '../galaxyInteractionMachine';
 import type { MemoryStage, WordCard } from '../types';
 import type { GalaxyEdge, GalaxyEdgeType, GalaxyNode, WordGalaxy } from '../wordGalaxy';
 
@@ -331,7 +332,7 @@ export default function InteractiveGalaxyGraph({
   const introAnimationTimeoutRef = useRef<number | null>(null);
   const nodePulseTimeoutRef = useRef<number | null>(null);
   const animationSignalRef = useRef(animationSignal);
-  const lastTouchHighlightRef = useRef<{ nodeId: string; time: number } | null>(null);
+  const lastTouchHighlightRef = useRef<GraphTouchHighlight | null>(null);
   const [internalShowMasteryColors, setInternalShowMasteryColors] = useState(false);
   const [layoutVersion, setLayoutVersion] = useState(0);
   const [detailPosition, setDetailPosition] = useState<DetailPosition | null>(null);
@@ -754,7 +755,6 @@ export default function InteractiveGalaxyGraph({
     const drag = dragRef.current;
     if (drag) {
       const neighbors = neighborMapRef.current.get(drag.node.id) ?? new Set<string>();
-      const shouldSelect = selectTappedNode && !drag.moved && drag.selectOnTap;
       drag.node.fx = null;
       drag.node.fy = null;
       drag.node.vx = clamp((drag.node.vx ?? 0) + drag.vx * 0.72, -24, 24);
@@ -768,21 +768,19 @@ export default function InteractiveGalaxyGraph({
         neighbor.vy = clamp((neighbor.vy ?? 0) + drag.vy * 0.16, -10, 10);
       }
       dragRef.current = null;
-      if (shouldSelect) {
-        const nextSelectedId = selectedNodeIdRef.current === drag.node.id ? null : drag.node.id;
-        selectedNodeIdRef.current = nextSelectedId;
-        highlightedNodeIdRef.current = nextSelectedId;
-        activeNodeIdRef.current = null;
-        updateDetailPosition(nextSelectedId);
-        onSelectNode(nextSelectedId);
-      } else {
-        if (!drag.moved && selectedNodeIdRef.current && selectedNodeIdRef.current !== drag.node.id) {
-          selectedNodeIdRef.current = null;
-          updateDetailPosition(null);
-          onSelectNode(null);
-        }
-        highlightedNodeIdRef.current = drag.node.id;
-        activeNodeIdRef.current = null;
+      const tapOutcome = resolveGraphNodeTap({
+        nodeId: drag.node.id,
+        selectedNodeId: selectedNodeIdRef.current,
+        moved: drag.moved || !selectTappedNode,
+        selectOnTap: drag.selectOnTap
+      });
+      const previousSelectedNodeId = selectedNodeIdRef.current;
+      selectedNodeIdRef.current = tapOutcome.selectedNodeId;
+      highlightedNodeIdRef.current = tapOutcome.highlightedNodeId;
+      activeNodeIdRef.current = null;
+      if (tapOutcome.type === 'select' || previousSelectedNodeId !== tapOutcome.selectedNodeId) {
+        updateDetailPosition(tapOutcome.selectedNodeId);
+        onSelectNode(tapOutcome.selectedNodeId);
       }
       updateCursor('grab');
       settleSimulation();
@@ -1086,8 +1084,14 @@ export default function InteractiveGalaxyGraph({
 
     if (node) {
       const now = performance.now();
-      const recentlyTouched = lastTouchHighlightRef.current?.nodeId === node.id && now - lastTouchHighlightRef.current.time < 2400;
-      const wasHighlighted = highlightedNodeIdRef.current === node.id || selectedNodeIdRef.current === node.id || recentlyTouched;
+      const contact = resolveGraphNodeContact({
+        nodeId: node.id,
+        selectedNodeId: selectedNodeIdRef.current,
+        highlightedNodeId: highlightedNodeIdRef.current,
+        touchHighlight: lastTouchHighlightRef.current,
+        now,
+        pointerType: event.pointerType
+      });
       node.vx = (node.vx ?? 0) * 0.5;
       node.vy = (node.vy ?? 0) * 0.5;
       dragRef.current = {
@@ -1098,18 +1102,16 @@ export default function InteractiveGalaxyGraph({
         startClientX: event.clientX,
         startClientY: event.clientY,
         moved: false,
-        selectOnTap: wasHighlighted,
+        selectOnTap: contact.selectOnTap,
         vx: 0,
         vy: 0
       };
       hoveredNodeIdRef.current = node.id;
       activeNodeIdRef.current = node.id;
-      highlightedNodeIdRef.current = node.id;
-      if (!wasHighlighted) {
+      highlightedNodeIdRef.current = contact.highlightedNodeId;
+      lastTouchHighlightRef.current = contact.touchHighlight;
+      if (!contact.wasHighlighted) {
         pulseNodeNeighborhood(node.id);
-      }
-      if (event.pointerType === 'touch' || event.pointerType === 'pen') {
-        lastTouchHighlightRef.current = { nodeId: node.id, time: now };
       }
       updateCursor('grabbing');
       heatSimulation(0.42);

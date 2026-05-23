@@ -1,5 +1,29 @@
-const CACHE_NAME = 'techlex-os-cache-v0.1.1';
-const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon.svg'];
+const CACHE_NAME = 'techlex-os-cache-v0.1.3';
+const APP_SHELL = ['./', './index.html', './manifest.webmanifest', './icons/icon.svg', './avatars/default-user-avatar.svg'];
+
+function isSameOrigin(request) {
+  return new URL(request.url).origin === self.location.origin;
+}
+
+function isCacheableRequest(request) {
+  if (request.method !== 'GET' || !isSameOrigin(request)) {
+    return false;
+  }
+
+  if (request.cache === 'no-store' || request.cache === 'reload') {
+    return false;
+  }
+
+  return true;
+}
+
+function putIfCacheable(request, response) {
+  if (!isCacheableRequest(request) || !response || !response.ok) {
+    return;
+  }
+
+  caches.open(CACHE_NAME).then((cache) => cache.put(request, response.clone()));
+}
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
@@ -28,8 +52,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(event.request)
         .then((response) => {
-          const copy = response.clone();
-          caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+          putIfCacheable(event.request, response);
           return response;
         })
         .catch(() => caches.match(event.request).then((cached) => cached || caches.match('./index.html')))
@@ -44,8 +67,7 @@ self.addEventListener('fetch', (event) => {
       }
 
       return fetch(event.request).then((response) => {
-        const copy = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
+        putIfCacheable(event.request, response);
         return response;
       });
     })

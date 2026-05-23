@@ -1,23 +1,41 @@
-# Source-Available Preview License
+# Janus Wordscape OS License
 
 Copyright (c) 2026 Janus.
 
-This repository and its release packages are provided for personal learning,
-evaluation, and non-commercial trial use of "雅努斯词境 OS".
+Software source code in this repository is licensed under the GNU Affero General
+Public License, version 3 or later.
 
-Permission is granted to download, install, and use unmodified release builds
-for personal learning and evaluation.
+SPDX-License-Identifier: AGPL-3.0-or-later
 
-No permission is granted to:
+The full license text is available from the Free Software Foundation:
 
-- sell, sublicense, or commercially redistribute this project;
-- provide this project as a hosted commercial service;
-- remove product, copyright, license, or third-party notices;
-- use the name "雅努斯词境 OS", "Janus Wordscape OS", or related marks in a
-  way that implies endorsement by the project owner;
-- redistribute modified versions without explicit written permission.
+https://www.gnu.org/licenses/agpl-3.0.html
 
-Third-party dependencies remain governed by their own licenses. See NOTICE.
+## Scope
 
-This preview license is not legal advice. Before a broader public or commercial
-release, review the final licensing strategy with a qualified professional.
+This software license applies to application source code, scripts, tests, build
+configuration, and release runtime code, unless a file or directory states a
+different license.
+
+## Documentation, Card Content, and Brand
+
+Documentation is licensed separately. See `DOCS_LICENSE.md`.
+
+Sample word-card packages, production blueprints, schemas, and other learning
+content are licensed separately. See `CONTENT_LICENSE.md`.
+
+Product names, logos, icons, screenshots, and related marks are not licensed
+under AGPL. See `BRAND_POLICY.md`.
+
+Third-party dependencies remain governed by their own licenses. See `NOTICE`.
+
+## Practical Meaning
+
+You may use, study, modify, and share the software under AGPL-3.0-or-later.
+
+If you distribute a modified version, or operate a modified version as a network
+service for users, you must provide the corresponding source code under the same
+license terms.
+
+This file is not legal advice. Review the final licensing strategy with a
+qualified professional before commercial rollout.
