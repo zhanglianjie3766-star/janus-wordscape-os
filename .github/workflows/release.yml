@@ -34,7 +34,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
 
       - name: Enable Corepack
         run: corepack enable
@@ -81,5 +80,5 @@ jobs:
             "data/card-production/janus-personal-ai-english-2000-blueprint.md#2000-card production blueprint" \
             "schemas/standard-word-card-package.schema.json#Standard word-card package JSON schema" \
             "docs/QUICK_START.md#Quick start guide" \
-            --title "雅努斯词境 OS · 技术英语词汇网络 ${RELEASE_TAG}" \
+            --title "Janus Wordscape OS Technical Vocabulary Network ${RELEASE_TAG}" \
             --notes-file CHANGELOG.md
