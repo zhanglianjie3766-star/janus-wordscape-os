@@ -81,4 +81,5 @@ jobs:
             "schemas/standard-word-card-package.schema.json#Standard word-card package JSON schema" \
             "docs/QUICK_START.md#Quick start guide" \
             --title "Janus Wordscape OS Technical Vocabulary Network ${RELEASE_TAG}" \
+            --prerelease \
             --notes-file CHANGELOG.md
