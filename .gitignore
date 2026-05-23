@@ -1,0 +1,9 @@
+node_modules/
+dist/
+releases/
+data/exports/
+data/logs/
+data/test-fixtures/large-card-package-*.json
+.env
+.env.*
+*.log

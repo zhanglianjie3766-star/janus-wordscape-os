@@ -1,0 +1,93 @@
+{
+  "package_id": "ai-programming-english-v0.2-sample",
+  "package_version": "0.2.0",
+  "generated_by": "codex-card-factory",
+  "generated_at": "2026-05-20T00:00:00+08:00",
+  "default_language": "zh-CN",
+  "domain_packs": [
+    {
+      "domain_pack_id": "ai-programming-english",
+      "name": "AI Programming English",
+      "description": "Technical English for IDEs, AI coding assistants, agentic coding, Git, CLI, debugging, and documentation.",
+      "scenes": [
+        "ide_editor",
+        "ai_code_assistant"
+      ]
+    }
+  ],
+  "cards": [
+    {
+      "card_id": "ai-programming-english-extension-001",
+      "headword": "extension",
+      "phonetic": "/ik-STEN-shen/",
+      "audio_asset_id": "audio/ai-programming-english/extension-us.mp3",
+      "audio_accent": "US",
+      "definition_zh": "扩展；用于增强软件功能的插件式模块。",
+      "definition_en": "A software add-on that extends an application's capabilities.",
+      "part_of_speech": "noun",
+      "examples": [
+        {
+          "example_en": "Install the Cursor extension to add AI coding features to the editor.",
+          "example_zh": "安装 Cursor 扩展，为编辑器添加 AI 编程功能。",
+          "context": "IDE setup"
+        },
+        {
+          "example_en": "Disable the extension if it conflicts with your workspace settings.",
+          "example_zh": "如果该扩展与工作区设置冲突，就禁用它。",
+          "context": "IDE troubleshooting"
+        }
+      ],
+      "source": {
+        "source_id": "cursor-official",
+        "source_name": "Cursor Official Website",
+        "source_url": "https://cursor.com/cn",
+        "source_type": "official_website",
+        "source_priority": "P0"
+      },
+      "domain_pack_id": "ai-programming-english",
+      "scene_tags": [
+        "ide_editor",
+        "ai_code_assistant"
+      ],
+      "frequency_tier": "F1",
+      "usage_tasks": [
+        "Understand Cursor website and IDE extension terminology."
+      ],
+      "synonyms": [
+        "add-on",
+        "plugin"
+      ],
+      "confusing_words": [
+        "plugin",
+        "integration"
+      ],
+      "word_family": [
+        "extend",
+        "extended",
+        "extensible"
+      ],
+      "tags": [
+        "ai-programming",
+        "ide/editor",
+        "source/cursor"
+      ],
+      "links": [
+        "plugin",
+        "integration"
+      ],
+      "aliases": [
+        "VS Code extension",
+        "Cursor extension"
+      ],
+      "notes": "Prepared outside the client and imported as reusable learning content. Compare with [[plugin]] and [[integration]]. #ai-programming #ide/editor",
+      "frequency_reason": "F1 because extension appears repeatedly in IDE setup, editor capability, install, and troubleshooting flows.",
+      "source_context": "Cursor official pages use extension for installable editor capabilities and integrations.",
+      "card_status": "approved",
+      "quality": {
+        "source_verified": true,
+        "examples_translated": true,
+        "ready_for_learning": true
+      }
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+name: Create GitHub Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Release tag, for example v0.1.0-alpha'
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve tag
+        id: release_tag
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "tag=${{ inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Enable Corepack
+        run: corepack enable
+
+      - name: Install dependencies
+        run: corepack pnpm install --frozen-lockfile
+
+      - name: Validate version
+        run: |
+          PACKAGE_VERSION="$(node -p "require('./package.json').version")"
+          TAG_VERSION="${{ steps.release_tag.outputs.tag }}"
+          TAG_VERSION="${TAG_VERSION#v}"
+          if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
+            echo "package.json version $PACKAGE_VERSION does not match tag $TAG_VERSION"
+            exit 1
+          fi
+
+      - name: Validate
+        run: |
+          corepack pnpm run typecheck
+          corepack pnpm run test:fsrs-golden
+          corepack pnpm run build
+
+      - name: Create release package
+        run: corepack pnpm run package
+
+      - name: Zip release package
+        run: |
+          VERSION="$(node -p "require('./package.json').version")"
+          RELEASE_DIR="releases/janus-wordscape-os-v${VERSION}"
+          ZIP_NAME="janus-wordscape-os-v${VERSION}-dist.zip"
+          test -d "$RELEASE_DIR"
+          zip -r "$ZIP_NAME" "$RELEASE_DIR"
+          echo "ZIP_NAME=$ZIP_NAME" >> "$GITHUB_ENV"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ steps.release_tag.outputs.tag }}
+        run: |
+          gh release create "$RELEASE_TAG" \
+            "$ZIP_NAME#Janus Wordscape OS release package" \
+            "data/card-production/janus-personal-ai-english-sample-120.package.json#120-card acceptance sample package" \
+            "data/card-production/janus-personal-ai-english-2000-blueprint.md#2000-card production blueprint" \
+            "schemas/standard-word-card-package.schema.json#Standard word-card package JSON schema" \
+            "docs/QUICK_START.md#Quick start guide" \
+            --title "雅努斯词境 OS · 技术英语词汇网络 ${RELEASE_TAG}" \
+            --notes-file CHANGELOG.md

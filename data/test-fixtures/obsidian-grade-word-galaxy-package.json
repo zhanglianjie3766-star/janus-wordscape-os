@@ -1,0 +1,165 @@
+{
+  "package_id": "obsidian-grade-word-galaxy-smoke",
+  "package_version": "phase10",
+  "generated_by": "codex-card-factory",
+  "generated_at": "2026-05-20T00:00:00+08:00",
+  "default_language": "zh-CN",
+  "domain_packs": [
+    {
+      "domain_pack_id": "ai-programming-english",
+      "name": "AI Programming English",
+      "description": "Technical English for IDEs, AI coding assistants, agentic coding, Git, CLI, debugging, and documentation.",
+      "scenes": ["ide_editor", "ai_code_assistant", "agentic_coding"]
+    }
+  ],
+  "cards": [
+    {
+      "card_id": "obsidian-extension-001",
+      "headword": "extension",
+      "definition_zh": "扩展；用于增强软件能力的插件式模块。",
+      "definition_en": "A software add-on that extends an application's capabilities.",
+      "part_of_speech": "noun",
+      "examples": [
+        {
+          "example_en": "Install the Cursor extension before testing inline chat.",
+          "example_zh": "测试 inline chat 前先安装 Cursor 扩展。",
+          "context": "IDE setup"
+        },
+        {
+          "example_en": "Disable the extension if it conflicts with another plugin.",
+          "example_zh": "如果这个扩展与另一个插件冲突，就禁用它。",
+          "context": "IDE troubleshooting"
+        }
+      ],
+      "source": {
+        "source_id": "cursor-official",
+        "source_name": "Cursor Official Website",
+        "source_url": "https://cursor.com/cn",
+        "source_type": "official_website",
+        "source_priority": "P0"
+      },
+      "domain_pack_id": "ai-programming-english",
+      "scene_tags": ["ide_editor", "ai_code_assistant"],
+      "frequency_tier": "F1",
+      "usage_tasks": ["Use [[plugin]] and [[integration]] to compare extension vocabulary in a real IDE."],
+      "synonyms": ["add-on", "plugin"],
+      "confusing_words": ["plugin", "integration"],
+      "word_family": ["extend", "extended", "extensible"],
+      "tags": ["ai-programming", "ide/editor", "source/cursor"],
+      "links": ["plugin", "integration"],
+      "aliases": ["Cursor extension", "VS Code extension"],
+      "notes": "Obsidian smoke card. Compare [[plugin]] and [[integration]]. #ai-programming #ide/editor"
+    },
+    {
+      "card_id": "obsidian-plugin-001",
+      "headword": "plugin",
+      "definition_zh": "插件；接入宿主软件或系统以扩展功能的组件。",
+      "definition_en": "A component that plugs into a host application or system to extend functionality.",
+      "part_of_speech": "noun",
+      "examples": [
+        {
+          "example_en": "The plugin adds an AI assistant to the editor.",
+          "example_zh": "这个插件给编辑器增加了 AI 助手。",
+          "context": "IDE extension marketplace"
+        },
+        {
+          "example_en": "A plugin may be installed, while an integration may connect external services.",
+          "example_zh": "插件通常可以安装，而集成通常连接外部服务。",
+          "context": "tool comparison"
+        }
+      ],
+      "source": {
+        "source_id": "vscode-docs",
+        "source_name": "VS Code Docs",
+        "source_url": "https://code.visualstudio.com/docs",
+        "source_type": "official_docs",
+        "source_priority": "P1"
+      },
+      "domain_pack_id": "ai-programming-english",
+      "scene_tags": ["ide_editor"],
+      "frequency_tier": "F1",
+      "usage_tasks": ["Understand the difference between [[extension]] and [[integration]]."],
+      "synonyms": ["extension", "add-on"],
+      "confusing_words": ["integration", "mcp"],
+      "word_family": ["plug", "pluggable"],
+      "tags": ["ai-programming", "ide/plugin"],
+      "links": ["extension", "integration"],
+      "aliases": ["add-on"],
+      "notes": "Backlink source for [[extension]]. #ide/plugin"
+    },
+    {
+      "card_id": "obsidian-integration-001",
+      "headword": "integration",
+      "definition_zh": "集成；把外部系统、服务或工具连接进工作流。",
+      "definition_en": "A connection that brings an external service, tool, or system into a workflow.",
+      "part_of_speech": "noun",
+      "examples": [
+        {
+          "example_en": "The GitHub integration sends repository context to the coding assistant.",
+          "example_zh": "GitHub 集成会把仓库上下文发送给代码助手。",
+          "context": "tool setup"
+        },
+        {
+          "example_en": "Do not confuse an integration with a local plugin.",
+          "example_zh": "不要把集成和本地插件混为一谈。",
+          "context": "software terminology"
+        }
+      ],
+      "source": {
+        "source_id": "github-docs",
+        "source_name": "GitHub Docs",
+        "source_url": "https://docs.github.com/",
+        "source_type": "official_docs",
+        "source_priority": "P1"
+      },
+      "domain_pack_id": "ai-programming-english",
+      "scene_tags": ["ai_code_assistant", "agentic_coding"],
+      "frequency_tier": "F2",
+      "usage_tasks": ["Explain how [[plugin]] differs from [[extension]] in a tool setup task."],
+      "synonyms": ["connection", "connector"],
+      "confusing_words": ["plugin", "extension"],
+      "word_family": ["integrate", "integrated"],
+      "tags": ["ai-programming", "tool/integration"],
+      "links": ["plugin", "extension"],
+      "aliases": ["connector"],
+      "notes": "Bridge concept for [[extension]] and [[plugin]]. #tool/integration"
+    },
+    {
+      "card_id": "obsidian-agent-001",
+      "headword": "agent",
+      "definition_zh": "智能体；能接收目标、调用工具并推进任务的软件执行体。",
+      "definition_en": "A software actor that can receive goals, use tools, and advance tasks.",
+      "part_of_speech": "noun",
+      "examples": [
+        {
+          "example_en": "The coding agent edits files and explains its plan.",
+          "example_zh": "代码智能体会编辑文件并解释它的计划。",
+          "context": "agentic coding"
+        },
+        {
+          "example_en": "An agent may call tools through an integration layer.",
+          "example_zh": "智能体可以通过集成层调用工具。",
+          "context": "AI tool workflow"
+        }
+      ],
+      "source": {
+        "source_id": "openai-codex-docs",
+        "source_name": "OpenAI Codex Docs",
+        "source_url": "https://developers.openai.com/codex",
+        "source_type": "official_docs",
+        "source_priority": "P1"
+      },
+      "domain_pack_id": "ai-programming-english",
+      "scene_tags": ["agentic_coding", "ai_code_assistant"],
+      "frequency_tier": "F1",
+      "usage_tasks": ["Describe how an [[agent]] can use a [[tool integration]]."],
+      "synonyms": ["assistant", "coding agent"],
+      "confusing_words": ["bot", "assistant"],
+      "word_family": ["agentic", "agency"],
+      "tags": ["ai-programming", "agentic-coding"],
+      "links": ["integration"],
+      "aliases": ["coding agent", "AI agent"],
+      "notes": "Agent cards should connect to [[integration]] and tool workflows. #agentic-coding"
+    }
+  ]
+}

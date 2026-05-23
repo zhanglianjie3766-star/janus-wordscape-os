@@ -1,0 +1,23 @@
+# Source-Available Preview License
+
+Copyright (c) 2026 Janus.
+
+This repository and its release packages are provided for personal learning,
+evaluation, and non-commercial trial use of "雅努斯词境 OS".
+
+Permission is granted to download, install, and use unmodified release builds
+for personal learning and evaluation.
+
+No permission is granted to:
+
+- sell, sublicense, or commercially redistribute this project;
+- provide this project as a hosted commercial service;
+- remove product, copyright, license, or third-party notices;
+- use the name "雅努斯词境 OS", "Janus Wordscape OS", or related marks in a
+  way that implies endorsement by the project owner;
+- redistribute modified versions without explicit written permission.
+
+Third-party dependencies remain governed by their own licenses. See NOTICE.
+
+This preview license is not legal advice. Before a broader public or commercial
+release, review the final licensing strategy with a qualified professional.

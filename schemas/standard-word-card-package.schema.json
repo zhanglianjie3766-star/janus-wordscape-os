@@ -1,0 +1,306 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://techlex-os.local/schemas/standard-word-card-package.schema.json",
+  "title": "TechLex OS Standard Word Card Package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "package_id",
+    "package_version",
+    "generated_by",
+    "generated_at",
+    "default_language",
+    "domain_packs",
+    "cards"
+  ],
+  "properties": {
+    "package_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "package_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_by": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "default_language": {
+      "type": "string",
+      "default": "zh-CN"
+    },
+    "domain_packs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/domain_pack"
+      }
+    },
+    "cards": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/word_card"
+      }
+    }
+  },
+  "$defs": {
+    "domain_pack": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "domain_pack_id",
+        "name"
+      ],
+      "properties": {
+        "domain_pack_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "description": {
+          "type": "string"
+        },
+        "scenes": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "word_card": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "card_id",
+        "headword",
+        "definition_zh",
+        "definition_en",
+        "part_of_speech",
+        "examples",
+        "source",
+        "domain_pack_id",
+        "scene_tags",
+        "frequency_tier",
+        "usage_tasks"
+      ],
+      "properties": {
+        "card_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "headword": {
+          "type": "string",
+          "minLength": 1
+        },
+        "phonetic": {
+          "type": "string",
+          "description": "Pronunciation text, preferably IPA. Leave absent when unknown instead of inventing uncertain pronunciation."
+        },
+        "audio_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Optional online pronunciation audio URL."
+        },
+        "audio_asset_id": {
+          "type": "string",
+          "description": "Optional package-local or offline audio asset identifier."
+        },
+        "audio_accent": {
+          "type": "string",
+          "enum": ["US", "UK", "tool-native", "other"],
+          "description": "Pronunciation/accent source when it matters."
+        },
+        "definition_zh": {
+          "type": "string",
+          "minLength": 1
+        },
+        "definition_en": {
+          "type": "string",
+          "minLength": 1
+        },
+        "part_of_speech": {
+          "type": "string",
+          "minLength": 1
+        },
+        "examples": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/example"
+          }
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        },
+        "domain_pack_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "scene_tags": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "frequency_tier": {
+          "type": "string",
+          "enum": ["F1", "F2", "F3", "F4"]
+        },
+        "usage_tasks": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string"
+          }
+        },
+        "synonyms": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "confusing_words": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "word_family": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "tags": {
+          "type": "array",
+          "description": "Explicit Obsidian-style tags. Runtime also derives system tags from pack, scene, source, frequency, part of speech, and memory stage.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "links": {
+          "type": "array",
+          "description": "Explicit Obsidian-style wikilink targets. The runtime also parses [[...]] links from notes, examples, and usage tasks.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "aliases": {
+          "type": "array",
+          "description": "Alternative labels used to resolve [[wikilinks]] back to this card.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "notes": {
+          "type": "string"
+        },
+        "frequency_reason": {
+          "type": "string",
+          "description": "Production-side rationale for F1/F2/F3/F4 priority."
+        },
+        "source_context": {
+          "type": "string",
+          "description": "Short production-side note about where this word appears in the cited source."
+        },
+        "card_status": {
+          "type": "string",
+          "enum": ["candidate", "draft", "approved", "hold"],
+          "description": "Production readiness state. This is not a learner memory state."
+        },
+        "quality": {
+          "$ref": "#/$defs/quality"
+        }
+      }
+    },
+    "example": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "example_en",
+        "example_zh"
+      ],
+      "properties": {
+        "example_en": {
+          "type": "string",
+          "minLength": 1
+        },
+        "example_zh": {
+          "type": "string",
+          "minLength": 1
+        },
+        "context": {
+          "type": "string"
+        }
+      }
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_id",
+        "source_name",
+        "source_url",
+        "source_type",
+        "source_priority"
+      ],
+      "properties": {
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "official_website",
+            "official_docs",
+            "api_reference",
+            "help_center",
+            "tool_ui",
+            "cli_output",
+            "error_message",
+            "real_workflow",
+            "other"
+          ]
+        },
+        "source_priority": {
+          "type": "string",
+          "enum": ["P0", "P1", "P2", "P3", "P4"]
+        }
+      }
+    },
+    "quality": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source_verified": {
+          "type": "boolean"
+        },
+        "examples_translated": {
+          "type": "boolean"
+        },
+        "ready_for_learning": {
+          "type": "boolean"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "name": "雅努斯词境 OS",
+  "short_name": "词境 OS",
+  "description": "Personal vocabulary learning runtime.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#eef3f8",
+  "theme_color": "#d11b3d",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+# Notices
+
+## Product
+
+```text
+雅努斯词境 OS · 技术英语词汇网络
+Janus Wordscape OS - Technical English Vocabulary Network
+```
+
+Historical development codename: `TechLex OS`.
+
+## Third-Party Algorithm Dependency
+
+This application uses `ts-fsrs` as the local FSRS scheduler implementation.
+
+```text
+package: ts-fsrs
+version: 5.4.0
+license: MIT
+repository: https://github.com/open-spaced-repetition/ts-fsrs
+```
+
+Project rules:
+
+```text
+ts-fsrs version must be pinned exactly.
+ReviewEvent records scheduler="ts-fsrs" and scheduler_version="5.4.0".
+FSRS raw output is stored separately from product-adapted state.
+The product rule "click word card = unfamiliar = browser_detail + again = add to today's review queue" is not represented as a raw FSRS daily review.
+```
+
+## Runtime Dependencies
+
+Direct runtime dependencies include:
+
+```text
+React / React DOM - MIT
+d3-force - ISC
+lucide-react - ISC
+ts-fsrs - MIT
+```
+
+Build-time dependencies are listed in `package.json` and `pnpm-lock.yaml`.
+
+Third-party packages remain governed by their respective licenses.

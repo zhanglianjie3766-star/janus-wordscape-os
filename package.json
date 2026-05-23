@@ -1,0 +1,51 @@
+{
+  "name": "janus-wordscape-os",
+  "version": "0.1.0-alpha",
+  "private": true,
+  "description": "Janus Wordscape OS technical-English vocabulary network.",
+  "packageManager": "pnpm@10.20.0",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack serve --mode development --host 127.0.0.1 --port 5173",
+    "generate:large-package": "node scripts/generate-large-package.mjs",
+    "generate:overload-package": "set CARD_COUNT=1000&& node scripts/generate-large-package.mjs",
+    "generate:stress-package": "set CARD_COUNT=2000&& node scripts/generate-large-package.mjs",
+    "generate:persistence-package": "set CARD_COUNT=3000&& node scripts/generate-large-package.mjs",
+    "package": "tsc --noEmit && webpack --mode production && node scripts/create-release-package.mjs",
+    "serve:dist": "node scripts/serve-dist.mjs",
+    "smoke:phase7b": "node scripts/phase7b-large-package-smoke.mjs",
+    "smoke:phase7c": "node scripts/phase7c-session-drift-smoke.mjs",
+    "smoke:phase7d": "node scripts/phase7d-performance-graph-smoke.mjs",
+    "smoke:phase8": "node scripts/phase8-persistence-gate-smoke.mjs",
+    "smoke:phase9": "node scripts/phase9-indexeddb-recovery-smoke.mjs",
+    "smoke:phase10": "node scripts/phase10-obsidian-word-galaxy-smoke.mjs",
+    "smoke:phase11": "node scripts/phase11-real-use-ui-regression-smoke.mjs",
+    "test:fsrs-golden": "node scripts/fsrs-golden-test.mjs",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@types/d3-force": "^3.0.10",
+    "@types/react": "^19.2.6",
+    "@types/react-dom": "^19.2.3",
+    "autoprefixer": "^10.4.22",
+    "css-loader": "^7.1.2",
+    "d3-force": "^3.0.0",
+    "html-webpack-plugin": "^5.6.5",
+    "lucide-react": "^0.554.0",
+    "postcss": "^8.5.6",
+    "postcss-loader": "^8.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "style-loader": "^4.0.0",
+    "tailwindcss": "^3.4.18",
+    "ts-fsrs": "5.4.0",
+    "ts-loader": "^9.5.4",
+    "typescript": "^5.9.3",
+    "webpack": "^5.103.0",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.2"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.60.0"
+  }
+}

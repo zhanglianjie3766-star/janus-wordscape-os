@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="TechLex OS icon">
+  <rect width="512" height="512" rx="96" fill="#d11b3d"/>
+  <path d="M128 132h256v56H284v220h-56V188H128z" fill="#ffffff"/>
+  <path d="M150 410h212v-48h-86v-56h-56v56h-70z" fill="#ffe4ea"/>
+</svg>
