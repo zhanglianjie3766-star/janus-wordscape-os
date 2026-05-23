@@ -69,17 +69,29 @@ jobs:
           zip -r "$ZIP_NAME" "$RELEASE_DIR"
           echo "ZIP_NAME=$ZIP_NAME" >> "$GITHUB_ENV"
 
-      - name: Create GitHub Release
+      - name: Create or update GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
           RELEASE_TAG: ${{ steps.release_tag.outputs.tag }}
         run: |
-          gh release create "$RELEASE_TAG" \
-            "$ZIP_NAME#Janus Wordscape OS release package" \
-            "data/card-production/janus-personal-ai-english-sample-120.package.json#120-card acceptance sample package" \
-            "data/card-production/janus-personal-ai-english-2000-blueprint.md#2000-card production blueprint" \
-            "schemas/standard-word-card-package.schema.json#Standard word-card package JSON schema" \
-            "docs/QUICK_START.md#Quick start guide" \
-            --title "Janus Wordscape OS Technical Vocabulary Network ${RELEASE_TAG}" \
-            --prerelease \
-            --notes-file CHANGELOG.md
+          RELEASE_TITLE="Janus Wordscape OS Technical Vocabulary Network ${RELEASE_TAG}"
+          ASSETS=(
+            "$ZIP_NAME#Janus Wordscape OS release package"
+            "data/card-production/janus-personal-ai-english-sample-120.package.json#120-card acceptance sample package"
+            "data/card-production/janus-personal-ai-english-2000-blueprint.md#2000-card production blueprint"
+            "schemas/standard-word-card-package.schema.json#Standard word-card package JSON schema"
+            "docs/QUICK_START.md#Quick start guide"
+          )
+
+          if gh release view "$RELEASE_TAG" >/dev/null 2>&1; then
+            gh release edit "$RELEASE_TAG" \
+              --title "$RELEASE_TITLE" \
+              --prerelease \
+              --notes-file CHANGELOG.md
+            gh release upload "$RELEASE_TAG" "${ASSETS[@]}" --clobber
+          else
+            gh release create "$RELEASE_TAG" "${ASSETS[@]}" \
+              --title "$RELEASE_TITLE" \
+              --prerelease \
+              --notes-file CHANGELOG.md
+          fi
